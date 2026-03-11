@@ -6,7 +6,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Berlin
-      - ALLOW_INTERNAL_REQUESTS=true
+      - ALLOW_INTERNAL_REQUESTS=false
     volumes:
       - ./config:/config
     ports:

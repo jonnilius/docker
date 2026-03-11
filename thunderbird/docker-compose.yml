@@ -1,0 +1,19 @@
+services:
+  thunderbird:
+    container_name: thunderbird
+    restart: unless-stopped
+    image: jlesage/thunderbird
+
+    environment:
+      SECURE_CONNECTION: "1"
+#      SECURE_CONNECTION_VNC_METHOD: "SSL"
+      WEB_AUTHENTICATION: "1"
+#      WEB_AUTHENTICATION_USERNAME: "Jonnilius"
+#      WEB_AUTHENTICATION_PASSOWRD: "Password"
+      WEB_FILE_MANAGER: "1"
+      DARK_MODE: "1"
+
+    ports:
+      - "5900:5800"
+    volumes:
+      - "/docker/appdata/thunderbird:/config:rw"
