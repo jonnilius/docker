@@ -19,7 +19,6 @@ echo
 
 # Überprüfen auf vorhandene Container
 mapfile -t CONTAINERS < <(docker ps -a --format "{{.Names}}")
-
 if [ ${#CONTAINERS[@]} -eq 0 ]; then
         echo "Keine Container gefunden."
         exit 0
