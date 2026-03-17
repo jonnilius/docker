@@ -13,3 +13,6 @@ services:
       - 3000:80
       - 6000:443
     restart: unless-stopped
+
+volumes:
+  heimdall_config:
