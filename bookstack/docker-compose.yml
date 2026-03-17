@@ -1,0 +1,82 @@
+---
+
+# Dies ist ein vollständiges Beispiel einer docker-compose.yml
+# für ein auf linuxserver.io basierendes BookStack-Setup
+# mit dem linuxserver.io MariaDB-Container.
+
+# BITTE ALLE KOMMENTARE SORGFÄLTIG LESEN.
+# Viele der Werte sind nur Beispiele und MÜSSEN
+# an die eigene Umgebung angepasst werden.
+
+# Diese Container werden vom linuxserver.io-Team gepflegt,
+# nicht vom offiziellen BookStack-Projekt.
+
+# Für nicht kommentierte Optionen siehe die linuxserver-Dokumentation:
+# https://docs.linuxserver.io/images/docker-bookstack/#environment-variables-e
+
+services:
+
+  # Der Container für BookStack selbst
+  bookstack:
+    image: lscr.io/linuxserver/bookstack:latest # 26.03
+    # Die Version hier sollte auf das neueste BookStack-Release aktualisiert werden:
+    # https://github.com/BookStackApp/BookStack/releases
+    container_name: bookstack
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - APP_URL=https://doku.borinas.com
+      # APP_URL muss auf die Basis-URL gesetzt werden, unter der BookStack
+      # im Browser erreichbar sein soll. Der hier gezeigte Standardwert eignet sich
+      # für den Direktzugriff vom Docker-Host aus, daher der unten konfigurierte Port.
+      - APP_KEY=base64:3qjlIoUX4Tw6fUQgZcxMbz6lb8+dAzqpvItqHvahW1c=
+      # Der "base64:"-Präfix muss im Wert erhalten bleiben.
+      # APP_KEY muss ein eindeutiger Schlüssel sein. Eigenen Schlüssel generieren mit:
+      # docker run -it --rm --entrypoint /bin/bash lscr.io/linuxserver/bookstack:latest appkey
+
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_DATABASE=bookstack     # muss mit MYSQL_DATABASE im MariaDB-Container übereinstimmen
+      - DB_USERNAME=bookstack     # muss mit MYSQL_USER im MariaDB-Container übereinstimmen
+      - DB_PASSWORD=bookstack8432 # muss mit MYSQL_PASSWORD im MariaDB-Container übereinstimmen
+    volumes:
+      - ./bookstack_app_data:/config
+      # In der Regel muss nur dieses eine Volume eingebunden werden.
+      # Es wird einem Ordner "bookstack_app_data" im selben
+      # Verzeichnis wie diese Compose-Datei zugeordnet.
+    ports:
+      - 6875:80 
+      # 6875 ist nur ein Beispiel-Port. Er kann auf einen beliebigen freien Port geändert werden.
+      # Wichtig ist, dass er mit der APP_URL übereinstimmt, 
+      # damit die Weiterleitungen und Verlinkungen in BookStack korrekt funktionieren.
+    restart: unless-stopped
+
+  # Datenbankcontainer für BookStack
+  mariadb:
+    image: lscr.io/linuxserver/mariadb:latest # 11.4.9
+    # Version hier sollte auf die neueste stabile MariaDB-Version aktualisiert werden:
+    # https://github.com/linuxserver/docker-mariadb/pkgs/container/mariadb/versions?filters%5Bversion_type%5D=tagged
+    container_name: mariadb
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - MYSQL_DATABASE=bookstack      # muss mit DB_DATABASE im BookStack-Container übereinstimmen
+      - MYSQL_USER=bookstack          # muss mit DB_USERNAME im BookStack-Container übereinstimmen
+      - MYSQL_PASSWORD=bookstack8432  # muss mit DB_PASSWORD im BookStack-Container übereinstimmen
+      - MYSQL_ROOT_PASSWORD=mysupersecretrootpassword 
+      # Das Root-Passwort kann im Nachhinein geändert werden
+    volumes:
+      - ./bookstack_db_data:/config
+      # In der Regel muss nur dieses eine Volume eingebunden werden.
+      # Es wird einem Ordner "bookstack_db_data" im selben
+      # Verzeichnis wie diese Compose-Datei zugeordnet.
+
+
+    #   - 3306:3306
+    # Diese Ports sind auskommentiert, da der Port für den normalen
+    # Betrieb nicht freigegeben werden muss – nur bei direktem externen
+    # Datenbankzugriff. Andernfalls besteht ein unnötiges Sicherheitsrisiko.
+    # ports:
+    restart: unless-stopped
