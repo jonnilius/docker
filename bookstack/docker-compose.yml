@@ -3,18 +3,18 @@ services:
     image: lscr.io/linuxserver/bookstack:latest
     container_name: bookstack
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-      - APP_URL=https://doku.borinas.com
-      - APP_KEY=base64:3qjlIoUX4Tw6fUQgZcxMbz6lb8+dAzqpvItqHvahW1c=
-      - DB_HOST=mariadb
-      - DB_PORT=3306
-      - DB_DATABASE=bookstack     # muss mit MYSQL_DATABASE im MariaDB-Container übereinstimmen
-      - DB_USERNAME=bookstack     # muss mit MYSQL_USER im MariaDB-Container übereinstimmen
-      - DB_PASSWORD=bookstack8432 # muss mit MYSQL_PASSWORD im MariaDB-Container übereinstimmen
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TZ}
+    - APP_URL=${APP_URL}
+    - APP_KEY=${APP_KEY}
+    - DB_HOST=${DB_HOST}
+    - DB_PORT=${DB_PORT}
+    - DB_DATABASE=${DB_DATABASE}
+    - DB_USERNAME=${DB_USERNAME}
+    - DB_PASSWORD=${DB_PASSWORD}
     volumes:
-      - /docker/appdata/bookstack/bookstack_app_data:/config
+      - /docker/appdata/bookstack/app:/config
     ports:
       - 6875:80 
     restart: unless-stopped
@@ -24,13 +24,13 @@ services:
     image: lscr.io/linuxserver/mariadb:latest
     container_name: mariadb
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-      - MYSQL_DATABASE=bookstack      # muss mit DB_DATABASE im BookStack-Container übereinstimmen
-      - MYSQL_USER=bookstack          # muss mit DB_USERNAME im BookStack-Container übereinstimmen
-      - MYSQL_PASSWORD=bookstack8432  # muss mit DB_PASSWORD im BookStack-Container übereinstimmen
-      - MYSQL_ROOT_PASSWORD=mysupersecretrootpassword 
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TZ}
+    - MYSQL_DATABASE=${MYSQL_DATABASE}
+    - MYSQL_USER=${MYSQL_USER}
+    - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     volumes:
-      - /docker/appdata/bookstack/bookstack_db_data:/config
+      - /docker/appdata/bookstack/db:/config
     restart: unless-stopped
