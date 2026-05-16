@@ -14,5 +14,5 @@ services:
 
     volumes:
       - /home/john-andreas/:/srv
-      - ./database:/database
-      - ./config:/config
+      - /docker/appdata/filebrowser/database:/database
+      - /docker/appdata/filebrowser/config:/config
