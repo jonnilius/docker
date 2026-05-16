@@ -38,41 +38,38 @@ done
 
 # Benutzereingabe
 echo
-echo -ne "${CYAN}Container auswählen (Nummer): ${NC}"
-read -r SELECTION
+echo -ne "${CYAN}Geben Sie die Nummern der Container ein, die Sie aktualisieren möchten (z.B. 1 3 5): ${NC}"
+read -r -a SELECTION
+SELECTED_CONTAINERS=()
+
 
 
 ## Validierung
-# Überprüfen, ob Eingabe eine Zahl ist
-if ! [[ "$SELECTION" =~ ^[0-9]+$ ]]; then
-        echo "Ungültige Eingabe. Bitte eine Zahl eingeben."
-        exit 1
-fi
-# Überprüfen, ob Zahl im gültigen Bereich ist
-if [ "$SELECTION" -gt "${#CONTAINERS[@]}" ]; then
-        echo "Nummer existiert nicht."
-        exit 1
-fi
+for SEL in "${MULTI_SELECTIONS[@]}"; do
+    # Überprüfen, ob Eingabe eine Zahl ist
+    if ! [[ "$SEL" =~ ^[0-9]+$ ]]; then
+        echo "Ungültige Eingabe: $SEL. Überspringe."
+        continue
+    fi
+
+    # Überprüfen, ob Zahl im gültigen Bereich ist
+    if [ "$SEL" -gt "${#CONTAINERS[@]}" ]; then
+        echo "Nummer $SEL existiert nicht. Überspringe."
+        continue
+    fi
+
+    # Wenn Eingabe 0 ist, alle Container auswählen
+    if [ "$SEL" -eq 0 ]; then
+        SELECTED_CONTAINERS=("${CONTAINERS[@]}")
+        break
+    fi
+    
+    INDEX=$((SEL-1))
+    SELECTED_CONTAINERS+=("${CONTAINERS[$INDEX]}")
+done
 
 
 # Auswahl auflösen
-if [ "$SELECTION" -eq 0 ]; then
-    echo -ne "${CYAN}Geben Sie die Nummern der Container ein, die Sie aktualisieren möchten (z.B. 1 3 5): ${NC}"
-    read -r -a MULTI_SELECTIONS
-    SELECTED_CONTAINERS=()
-    for SEL in "${MULTI_SELECTIONS[@]}"; do
-        if ! [[ "$SEL" =~ ^[0-9]+$ ]] || [ "$SEL" -lt 1 ] || [ "$SEL" -gt "${#CONTAINERS[@]}" ]; then
-            echo "Ungültige Auswahl: $SEL. Überspringe."
-            continue
-        fi
-        INDEX=$((SEL-1))
-        SELECTED_CONTAINERS+=("${CONTAINERS[$INDEX]}")
-    done
-else
-    INDEX=$((SELECTION-1))
-    SELECTED_CONTAINERS=("${CONTAINERS[$INDEX]}")
-fi
-
 echo
 echo -e "${CYAN}Ausgewählt:${NC}"
 for c in "${SELECTED_CONTAINERS[@]}"; do
