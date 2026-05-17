@@ -1,3 +1,40 @@
+# Workspace
 docker.code-workspace
+
+# Environment
 **/.env
-**/.env.*
+
+# Backups
+*.tar.gz
+backup/
+release/
+
+# Runtime/AppData
+**/config/
+**/data/
+**/database/
+**/db/
+**/app/
+**/appdata/
+
+# Container data
+bookstack/bookstack_app_data/
+bookstack/bookstack_db_data/
+filebrowser/config/
+filebrowser/database/
+
+# Services
+heimdall/
+jdownloader2/
+n8n/
+navidrome/
+ntfy/
+pihole/
+portainer/
+vaultwarden/
+
+# NPM
+npm/data/
+npm/letsencrypt/
+npm/npm_data/
+npm/npm_letsencrypt/

@@ -1,19 +1,19 @@
 #!/bin/bash
 
 # Farben
+# GREEN='\033[0;32m'
+# YELLOW='\033[1;33m'
 CYAN='\033[0;36m'
 RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
 NC='\033[0m' # Keine Farbe
 
 # Basisverzeichnis für Docker-Stacks
 BASE_DIR="$HOME/docker"
 
 # Header
-echo -e "${RED}==============================${NC}"
-echo -e "   Docker Container Updater"
-echo -e "${RED}==============================${NC}"
+echo -e "${RED} ==============================${NC}"
+echo -e "    Docker Container Updater"
+echo -e "${RED} ==============================${NC}"
 echo
 
 
