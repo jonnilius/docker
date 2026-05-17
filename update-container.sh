@@ -26,7 +26,7 @@ fi
 
 # Container auflisten
 echo -e "${CYAN}Verfügbare Container:${NC}"
-echo " 0) [Mehrere Container auswählen]"
+echo " 0) Alle Container auswählen"
 for i in "${!CONTAINERS[@]}"; do
 
     # Containername abrufen
@@ -38,14 +38,14 @@ done
 
 # Benutzereingabe
 echo
-echo -ne "${CYAN}Geben Sie die Nummern der Container ein, die Sie aktualisieren möchten (z.B. 1 3 5): ${NC}"
+echo -ne "${CYAN}Geben Sie die Nummern der Container ein, die Sie aktualisieren möchten: ${NC}"
 read -r -a SELECTION
 SELECTED_CONTAINERS=()
 
 
 
 ## Validierung
-for SEL in "${MULTI_SELECTIONS[@]}"; do
+for SEL in "${SELECTION[@]}"; do
     # Überprüfen, ob Eingabe eine Zahl ist
     if ! [[ "$SEL" =~ ^[0-9]+$ ]]; then
         echo "Ungültige Eingabe: $SEL. Überspringe."
@@ -67,6 +67,11 @@ for SEL in "${MULTI_SELECTIONS[@]}"; do
     INDEX=$((SEL-1))
     SELECTED_CONTAINERS+=("${CONTAINERS[$INDEX]}")
 done
+
+if [ "${#SELECTED_CONTAINERS[@]}" -eq 0 ]; then
+    echo "Keine gültige Auswahl getroffen."
+    exit 1
+fi
 
 
 # Auswahl auflösen
